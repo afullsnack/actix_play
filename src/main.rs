@@ -16,7 +16,11 @@ struct Info {
 async fn hello(name: web::Path<String>, iden: web::Query<Info>) -> impl Responder {
     let info = iden.into_inner();
     println!("The query param: {}", info.query);
-    format!("Hello, {name}, You are",)
+
+    if name.contains("mike") {
+        return format!("Hello Mike, how are you handling the situation with town?");
+    }
+    return format!("Hello, {name}, You are",);
 }
 
 #[get("/pizza")]
@@ -27,6 +31,8 @@ async fn get_pizza() -> HttpResponse {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     println!("...Initializing web server ");
+
+    println!("Server started on port 8080...");
 
     HttpServer::new(|| App::new().service(index).service(get_pizza).service(hello))
         .bind(("127.0.0.1", 8080))?
